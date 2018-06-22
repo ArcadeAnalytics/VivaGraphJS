@@ -71,14 +71,20 @@ function renderer(graph, settings) {
     userInteraction = false,
     isPaused = false,
 
-    transform = {
-      offsetX: 0,
-      offsetY: 0,
-      scale: 1
-    },
-
     publicEvents = eventify({}),
     containerDrag;
+
+    var transform;
+    if (settings.transform) {
+      transform = settings.transform;
+    } else {
+      transform = {
+        offsetX: 0,
+        offsetY: 0,
+        scale: 1
+      }
+    }
+
 
   return {
     /**
@@ -97,7 +103,18 @@ function renderer(graph, settings) {
         prerender();
 
         initDom();
-        updateCenter();
+        if (transform.offsetX === 0 && transform.offsetX === 0) {
+          updateCenter();
+        } else {
+          var containerSize = getDimension(container);
+          var scrollPoint = {
+            x: containerSize.width / 2,
+            y: containerSize.height / 2
+        };
+        graphics.scale(transform.scale, scrollPoint);
+        graphics.graphCenterChanged(transform.offsetX, transform.offsetY);
+        updateCenterRequired = false;
+        }
         listenToEvents();
 
         rendererInitialized = true;
