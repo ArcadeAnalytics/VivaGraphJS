@@ -175,7 +175,7 @@ function renderer(graph, settings) {
     getGraphics: function() {
       return graphics;
     },
-    
+
     /**
      * Gets current layout.
      */
@@ -244,9 +244,17 @@ function renderer(graph, settings) {
 
   function onRenderFrame() {
     isStable = layout.step() && !userInteraction;
+    if (isStable) {
+      onLayoutStop();
+    }
     renderGraph();
 
     return !isStable;
+  }
+
+  function onLayoutStop() {
+    var event = new CustomEvent('layout-stop', {detail: {layout: layout}});
+    container.dispatchEvent(event);
   }
 
   function renderIterations(iterationsCount) {
