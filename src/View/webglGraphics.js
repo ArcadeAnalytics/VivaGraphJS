@@ -379,17 +379,19 @@ function webglGraphics(options) {
             var linkUI = allLinks[link.id];
             delete allLinks[link.id];
 
-            linkProgram.removeLink(linkUI);
+            if (linkUI) {   // patch to overcome concurrency errors
+                linkProgram.removeLink(linkUI);
 
-            var linkIdToRemove = linkUI.id;
-            if (linkIdToRemove < linksCount) {
-                if (linksCount === 0 || linksCount === linkIdToRemove) {
-                    return; // no more links or removed link is the last one.
+                var linkIdToRemove = linkUI.id;
+                if (linkIdToRemove < linksCount) {
+                    if (linksCount === 0 || linksCount === linkIdToRemove) {
+                        return; // no more links or removed link is the last one.
+                    }
+
+                    var lastLinkUI = links[linksCount];
+                    links[linkIdToRemove] = lastLinkUI;
+                    lastLinkUI.id = linkIdToRemove;
                 }
-
-                var lastLinkUI = links[linksCount];
-                links[linkIdToRemove] = lastLinkUI;
-                lastLinkUI.id = linkIdToRemove;
             }
         },
 
@@ -404,23 +406,25 @@ function webglGraphics(options) {
             var nodeUI = allNodes[node.id];
             delete allNodes[node.id];
 
-            nodeProgram.removeNode(nodeUI);
+            if (nodeUI) {   // patch to overcome concurrency errors
+                nodeProgram.removeNode(nodeUI);
 
-            var nodeIdToRemove = nodeUI.id;
-            if (nodeIdToRemove < nodesCount) {
-                if (nodesCount === 0 || nodesCount === nodeIdToRemove) {
-                    return; // no more nodes or removed node is the last in the list.
+                var nodeIdToRemove = nodeUI.id;
+                if (nodeIdToRemove < nodesCount) {
+                    if (nodesCount === 0 || nodesCount === nodeIdToRemove) {
+                        return; // no more nodes or removed node is the last in the list.
+                    }
+
+                    var lastNodeUI = nodes[nodesCount];
+
+                    nodes[nodeIdToRemove] = lastNodeUI;
+                    lastNodeUI.id = nodeIdToRemove;
+
+                    // Since concrete shaders may cache properties in the UI element
+                    // we are letting them to make this swap (e.g. image node shader
+                    // uses this approach to update node's offset in the atlas)
+                    nodeProgram.replaceProperties(nodeUI, lastNodeUI);
                 }
-
-                var lastNodeUI = nodes[nodesCount];
-
-                nodes[nodeIdToRemove] = lastNodeUI;
-                lastNodeUI.id = nodeIdToRemove;
-
-                // Since concrete shaders may cache properties in the UI element
-                // we are letting them to make this swap (e.g. image node shader
-                // uses this approach to update node's offset in the atlas)
-                nodeProgram.replaceProperties(nodeUI, lastNodeUI);
             }
         },
 
