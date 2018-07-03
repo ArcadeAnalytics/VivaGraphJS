@@ -310,7 +310,9 @@ function renderer(graph, settings) {
   }
 
   function createNodeUi(node) {
+    console.log('[createNodeUi(node)] node: '+ JSON.stringify(node));
     var nodePosition = layout.getNodePosition(node.id);
+    console.log('[createNodeUi(node)] nodePosition: '+ JSON.stringify(nodePosition));
     graphics.addNode(node, nodePosition);
   }
 
