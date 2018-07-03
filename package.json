@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/anvaka/VivaGraphJS.git"
+    "url": "git://github.com/ArcadeAnalytics/VivaGraphJS.git"
   },
   "keywords": [
     "graph"
