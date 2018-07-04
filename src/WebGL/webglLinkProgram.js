@@ -102,7 +102,6 @@ function webglLinkProgram() {
         },
 
         removeLink : function (ui) {
-            console.log('[removeLink(ui)] ui: '+ JSON.stringify(ui));
             if (linksCount > 0) { linksCount -= 1; }
             // swap removed link with the last link. This will give us O(1) performance for links removal:
             if (ui.id < linksCount && linksCount > 0) {

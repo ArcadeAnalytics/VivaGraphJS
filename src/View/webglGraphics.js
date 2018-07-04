@@ -237,12 +237,9 @@ function webglGraphics(options) {
         * @param nodeUI visual representation of the node created by node() execution.
         **/
         addNode : function (node, boundPosition) {
-            console.log('[addNode(node, boundPosition)] node: '+ JSON.stringify(node));
-            console.log('[addNode(node, boundPosition)] boundPosition: '+ JSON.stringify(boundPosition));
             var uiid = nodesCount++,
                 ui = nodeUIBuilder(node);
 
-            console.log('[addNode(node, boundPosition)] ui: '+ JSON.stringify(ui));
             ui.id = uiid;
             ui.position = boundPosition;
             ui.node = node;
@@ -383,7 +380,6 @@ function webglGraphics(options) {
             delete allLinks[link.id];
 
             if (linkUI) {   // patch to overcome concurrency errors
-                console.log('[releaseLink(link)] linkUI: '+ JSON.stringify(linkUI));
                 linkProgram.removeLink(linkUI);
 
                 var linkIdToRemove = linkUI.id;
